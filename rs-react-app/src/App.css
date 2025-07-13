@@ -91,3 +91,9 @@
     padding: 50px 100px;
     justify-content: end;
 }
+
+.app-error {
+    color: var(--red);
+    letter-spacing: 1px;
+    text-align: center;
+}

@@ -18,7 +18,7 @@ type State = {
   searchTerm: string;
   loading: boolean;
   throwError: boolean;
-
+  error: string | null;
 };
 
 export default class App extends Component {
@@ -29,6 +29,7 @@ export default class App extends Component {
     searchTerm: localStorage.getItem('searchTerm') || '',
     loading: false,
     throwError: false,
+    error: null,
   };
 
   componentDidMount() {
@@ -67,6 +68,7 @@ export default class App extends Component {
 
       if (filteredPokemons.length === 0) {
         this.setState({ allPokemons: [], pokemons: [] });
+        return
       }
 
       const allPokemons = await Promise.all(
@@ -77,8 +79,8 @@ export default class App extends Component {
         allPokemons: allPokemons,
         pokemons: allPokemons.slice(0, 10)
       });
-    } catch (error) {
-      console.error(error);
+    } catch {
+      this.setState({ error: 'Something went wrong' });
     } finally {
       this.setState({ loading: false });
     }
@@ -103,7 +105,7 @@ export default class App extends Component {
         </section>
 
         <main className="pokemons-list">
-          {!this.state.loading && this.state.allPokemons.length === 0 &&
+          {!this.state.loading && !this.state.error && this.state.allPokemons.length === 0 &&
             <h3 className='no-results-message'>
               NO RESULTS <br />
               Please, enter another search
@@ -119,6 +121,13 @@ export default class App extends Component {
               </div>
             </div>
           ))}
+
+          {this.state.error && (
+            <h2 className="app-error">
+              {this.state.error} <br />
+              Please try again later
+            </h2>
+          )}
         </main>
 
         <section className="error-btn-block">
