@@ -24,7 +24,7 @@ export default class App extends Component {
     serverUrl: `${pokemonAPI}`,
     allPokemons: [],
     pokemons: [],
-    searchTerm: '',
+    searchTerm: localStorage.getItem('searchTerm') || '',
     loading: false,
   };
 
@@ -37,6 +37,7 @@ export default class App extends Component {
   };
 
   handleSearchClick = () => {
+    localStorage.setItem('searchTerm', this.state.searchTerm);
     this.setupConnection();
   };
 
