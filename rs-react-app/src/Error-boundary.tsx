@@ -27,7 +27,7 @@ export default class ErrorBoundary extends Component<Props, ErrorState> {
     if (this.state.hasError) {
       return (
         <div className="error-fallback">
-          <h3 className="error-message">SOMETHING WENT WRONG!</h3>
+          <h2 className="error-message">OOPS! <br /> Looks like the Pokemons ran away</h2>
           <button onClick={() => window.location.reload()}>RELOAD PAGE</button>
         </div>
       );
