@@ -30,7 +30,7 @@
 }
 
 .app-error {
-    color: var(--red);
-    letter-spacing: 1px;
-    text-align: center;
+  color: var(--red);
+  letter-spacing: 1px;
+  text-align: center;
 }

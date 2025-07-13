@@ -66,7 +66,7 @@ export default class App extends Component {
 
       if (filteredPokemons.length === 0) {
         this.setState({ allPokemons: [], pokemons: [] });
-        return
+        return;
       }
 
       const allPokemons = await Promise.all(
@@ -75,7 +75,7 @@ export default class App extends Component {
 
       this.setState({
         allPokemons: allPokemons,
-        pokemons: allPokemons.slice(0, 10)
+        pokemons: allPokemons.slice(0, 10),
       });
     } catch {
       this.setState({ error: 'Something went wrong' });
@@ -90,7 +90,7 @@ export default class App extends Component {
     }
 
     return (
-      <div className='app'>
+      <div className="app">
         {this.state.loading && <Loader />}
 
         <SearchBar
@@ -100,16 +100,20 @@ export default class App extends Component {
         />
 
         <main className="pokemons-list">
-          {!this.state.loading && !this.state.error && this.state.allPokemons.length === 0 &&
-            <h3 className='no-results-message'>
-              NO RESULTS <br />
-              Please, enter another search
-            </h3>
-          }
+          {!this.state.loading &&
+            !this.state.error &&
+            this.state.allPokemons.length === 0 && (
+              <h3 className="no-results-message">
+                NO RESULTS <br />
+                Please, enter another search
+              </h3>
+            )}
 
-          {!this.state.loading && this.state.allPokemons.length > 0 && this.state.pokemons.map((pokemon) => (
-            <PokemonCard key={pokemon.name} pokemon={pokemon} />
-          ))}
+          {!this.state.loading &&
+            this.state.allPokemons.length > 0 &&
+            this.state.pokemons.map((pokemon) => (
+              <PokemonCard key={pokemon.name} pokemon={pokemon} />
+            ))}
 
           {this.state.error && (
             <h2 className="app-error">
