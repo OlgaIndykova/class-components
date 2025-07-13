@@ -1,0 +1,19 @@
+.error-fallback {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+
+  background-image: url('../bg-error.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+.error-message {
+  color: var(--yellow);
+  letter-spacing: 1px;
+  text-align: center;
+}

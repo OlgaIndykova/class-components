@@ -1,0 +1,36 @@
+.app {
+  display: flex;
+  flex-direction: column;
+
+  background-image: url('../bg-pokemon.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+.pokemons-list {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+
+  padding: 50px;
+}
+
+.no-results-message {
+  text-align: center;
+  color: var(--red);
+}
+
+.error-btn-block {
+  display: flex;
+  padding: 50px 100px;
+  justify-content: end;
+}
+
+.app-error {
+  color: var(--red);
+  letter-spacing: 1px;
+  text-align: center;
+}
