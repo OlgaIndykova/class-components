@@ -17,6 +17,8 @@ type State = {
   pokemons: Pokemon[];
   searchTerm: string;
   loading: boolean;
+  throwError: boolean;
+
 };
 
 export default class App extends Component {
@@ -26,6 +28,7 @@ export default class App extends Component {
     pokemons: [],
     searchTerm: localStorage.getItem('searchTerm') || '',
     loading: false,
+    throwError: false,
   };
 
   componentDidMount() {
@@ -39,6 +42,10 @@ export default class App extends Component {
   handleSearchClick = () => {
     localStorage.setItem('searchTerm', this.state.searchTerm);
     this.setupConnection();
+  };
+
+  handleThrowError = () => {
+    this.setState({ throwError: true });
   };
 
   setupConnection = async () => {
@@ -78,8 +85,12 @@ export default class App extends Component {
   };
 
   render() {
+    if (this.state.throwError) {
+      throw new Error('User-triggered error');
+    }
+
     return (
-      <div>
+      <div className='app'>
         {this.state.loading &&
           <div className='loader-wrapper'>
             <img className='loader-body' src="/pokeball-pokemon.svg" alt="pokeball" />
@@ -111,7 +122,7 @@ export default class App extends Component {
         </main>
 
         <section className="error-btn-block">
-          <button>ERROR BUTTON</button>
+          <button onClick={this.handleThrowError}>ERROR BUTTON</button>
         </section>
       </div>
     );
