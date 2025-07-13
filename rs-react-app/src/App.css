@@ -1,3 +1,14 @@
+.app {
+    display: flex;
+    flex-direction: column;
+    
+    background-image: url('../bg-pokemon.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+}
+
 .search-section {
     display: flex;
     flex-wrap: wrap;
@@ -9,6 +20,8 @@
 
 .loader-wrapper {
     position: fixed;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     background-color: var(--light);
@@ -20,13 +33,13 @@
 }
 
 @keyframes rotating {
-  0% {
-    transform: rotateZ(0deg);
-  }
+    0% {
+        transform: rotateZ(0deg);
+    }
 
-  100% {
-    transform: rotateZ(360deg);
-  }
+    100% {
+        transform: rotateZ(360deg);
+    }
 }
 
 .loader-body {
