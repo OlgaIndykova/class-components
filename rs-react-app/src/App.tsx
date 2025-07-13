@@ -1,7 +1,9 @@
-import { Component } from "react";
-import { getPokemonDetails } from "./api/pokemon-details";
+import { Component } from 'react';
+import './App.css';
+import { getPokemonDetails } from './api/pokemon-details';
+import { getAllPokemons } from './api/all-pokemons';
 
-const pokemonAPI = 'https://pokeapi.co/api/v2/pokemon?limit=10';
+const pokemonAPI = 'https://pokeapi.co/api/v2/pokemon';
 
 type Pokemon = {
   name: string;
@@ -11,43 +13,92 @@ type Pokemon = {
 
 type State = {
   serverUrl: string;
+  allPokemons: Pokemon[];
   pokemons: Pokemon[];
+  searchTerm: string;
+  loading: boolean;
 };
 
-export class App extends Component {
+export default class App extends Component {
   state: State = {
-    serverUrl: pokemonAPI,
+    serverUrl: `${pokemonAPI}`,
+    allPokemons: [],
     pokemons: [],
+    searchTerm: '',
+    loading: false,
   };
 
   componentDidMount() {
     this.setupConnection();
   }
 
-  setupConnection = async () => {
-    try {
-      const data = await fetch(this.state.serverUrl).then(res => res.json());
+  handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ searchTerm: e.target.value });
+  };
 
-      const pokemons = await Promise.all(
-        data.results.map((p: { url: string }) => getPokemonDetails(p.url))
+  handleSearchClick = () => {
+    this.setupConnection();
+  };
+
+  setupConnection = async () => {
+    this.setState({ loading: true });
+
+    try {
+      const { searchTerm } = this.state;
+
+      const limit = searchTerm.trim() ? 1302 : 10;
+      const data = await getAllPokemons(`${pokemonAPI}?limit=${limit}`);
+
+      let filteredPokemons = data.results;
+
+      if (searchTerm.trim()) {
+        filteredPokemons = data.results.filter((p: { name: string }) =>
+          p.name.startsWith(searchTerm.toLowerCase())
+        );
+      }
+
+      if (filteredPokemons.length === 0) {
+        this.setState({ allPokemons: [], pokemons: [] });
+      }
+
+      const allPokemons = await Promise.all(
+        filteredPokemons.map((p: { url: string }) => getPokemonDetails(p.url))
       );
 
-      this.setState({ pokemons });
-    } catch {
-      this.setState({ error: 'Something went wrong' });
+      this.setState({
+        allPokemons: allPokemons,
+        pokemons: allPokemons.slice(0, 10)
+      });
+    } catch (error) {
+      console.error(error);
+    } finally {
+      this.setState({ loading: false });
     }
   };
 
   render() {
     return (
       <div>
+        {this.state.loading &&
+          <div className='loader-wrapper'>
+            <img className='loader-body' src="/pokeball-pokemon.svg" alt="pokeball" />
+          </div>
+        }
+
         <section className="search-section">
-          <input/>
-          <button>SEARCH POKEMON</button>
+          <input value={this.state.searchTerm} onChange={this.handleInputChange} />
+          <button onClick={this.handleSearchClick}>SEARCH POKEMON</button>
         </section>
 
         <main className="pokemons-list">
-          {this.state.pokemons.map((pokemon) => (
+          {!this.state.loading && this.state.allPokemons.length === 0 &&
+            <h3 className='no-results-message'>
+              NO RESULTS <br />
+              Please, enter another search
+            </h3>
+          }
+
+          {!this.state.loading && this.state.allPokemons.length > 0 && this.state.pokemons.map((pokemon) => (
             <div key={pokemon.name} className="pokemon-card">
               <img src={pokemon.image} alt={pokemon.name} />
               <div className="pokemon-name">{pokemon.name.toUpperCase()}</div>
@@ -65,5 +116,3 @@ export class App extends Component {
     );
   }
 }
-
-export default App;
