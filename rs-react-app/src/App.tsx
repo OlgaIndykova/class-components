@@ -2,14 +2,12 @@ import { Component } from 'react';
 import './App.css';
 import { getPokemonDetails } from './api/pokemon-details';
 import { getAllPokemons } from './api/all-pokemons';
+import type { Pokemon } from './types/pokemon';
+import { Loader } from './components/loader/loader';
+import { SearchBar } from './components/search-bar/search-bar';
+import { PokemonCard } from './components/pokemon-card/pokemon-card';
 
 const pokemonAPI = 'https://pokeapi.co/api/v2/pokemon';
-
-type Pokemon = {
-  name: string;
-  image: string;
-  description: string;
-};
 
 type State = {
   serverUrl: string;
@@ -93,16 +91,13 @@ export default class App extends Component {
 
     return (
       <div className='app'>
-        {this.state.loading &&
-          <div className='loader-wrapper'>
-            <img className='loader-body' src="/pokeball-pokemon.svg" alt="pokeball" />
-          </div>
-        }
+        {this.state.loading && <Loader />}
 
-        <section className="search-section">
-          <input value={this.state.searchTerm} onChange={this.handleInputChange} />
-          <button onClick={this.handleSearchClick}>SEARCH POKEMON</button>
-        </section>
+        <SearchBar
+          searchTerm={this.state.searchTerm}
+          onChange={this.handleInputChange}
+          onSearch={this.handleSearchClick}
+        />
 
         <main className="pokemons-list">
           {!this.state.loading && !this.state.error && this.state.allPokemons.length === 0 &&
@@ -113,13 +108,7 @@ export default class App extends Component {
           }
 
           {!this.state.loading && this.state.allPokemons.length > 0 && this.state.pokemons.map((pokemon) => (
-            <div key={pokemon.name} className="pokemon-card">
-              <img src={pokemon.image} alt={pokemon.name} />
-              <div className="pokemon-name">{pokemon.name.toUpperCase()}</div>
-              <div className="pokemon-description">
-                {pokemon.description.replace('\f', ' ')}
-              </div>
-            </div>
+            <PokemonCard key={pokemon.name} pokemon={pokemon} />
           ))}
 
           {this.state.error && (

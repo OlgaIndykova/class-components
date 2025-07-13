@@ -1,0 +1,24 @@
+.pokemon-card {
+  width: 200px;
+  padding: 10px;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+
+  background-color: var(--light);
+  border: 2px solid var(--dark);
+  border-radius: 10px;
+}
+
+.pokemon-name {
+  color: var(--red);
+  font-weight: 700;
+  letter-spacing: 0.8px;
+}
+
+.pokemon-description {
+  color: var(--dark);
+  text-align: center;
+}
